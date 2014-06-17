@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <jmxConfigurator />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%date %-5relative \(%thread\) %-5level [%logger{40}] %message%n</pattern>
+        </layout>
+    </appender>
+
+    <logger name="com.rill" level="debug" />
+    <logger name="org.apache" level="info" />
+    <logger name="org.springframework.ws" level="debug" />
+    <logger name="org.hibernate" level="warn" />
+    <logger name="org.hibernate.SQL" level="debug" />
+    <logger name="org.hibernate.pretty" level="warn" /> <!-- turn this to debug to see your entities -->
+    <logger name="com.mchange.v2" level="debug" />
+    <logger name="com.mchange.v2.async" level="debug" />
+    <logger name="org.springframework.beans.CachedIntrospectionResults" level="info" />
+    <logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory" level="info" />
+    <logger name="org.springframework.beans.BeanWrapperImpl" level="info" />
+    <logger name="org.springframework.beans.factory.xml.PluggableSchemaResolver" level="info" />
+    
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
