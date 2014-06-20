@@ -21,12 +21,7 @@ import static com.rill.rest.util.MultiMapUtil.addValueToMap;
  */
 public class OAuthApiRequestSigner extends BaseApiRequestSigner {
 
-    public static final String OAUTH_CONSUMER_KEY = "oauth_consumer_key";
-    public static final String OAUTH_NONCE = "oauth_nonce";
     public static final String OAUTH_SIGNATURE_METHOD = "oauth_signature_method";
-    public static final String OAUTH_TIMESTAMP = "oauth_timestamp";
-    public static final String OAUTH_SIGNATURE = "oauth_signature";
-    public static final String OAUTH_VERSION = "oauth_version";
 
     public static class Builder {
 
