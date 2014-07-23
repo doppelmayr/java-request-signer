@@ -34,7 +34,7 @@ public class ClassicApiRequestSignerTest extends BaseApiRequestSignerTest {
                                                                           (byte)0xa0, (byte)0x80, (byte)0x88,
                                                                           (byte)0xd7, (byte)0x87, (byte)0xa0, (byte)0xd8, 
                                                                           (byte)0xbb, (byte)0x03});
-        runFormatAndSignTest(new ClassicApiRequestSigner(), BaseApiRequestSigner.EncryptionAlgorithm.HMAC_SHA1_ALGORITHM,
+        runFormatAndSignTest(new ClassicApiRequestSigner(), EncryptionAlgorithm.HMAC_SHA1_ALGORITHM,
                              ClassicApiRequestSigner.SIGNATURE_METHOD_PARAM_NAME, getTestKey(), controlString);
     }
 
@@ -48,7 +48,7 @@ public class ClassicApiRequestSignerTest extends BaseApiRequestSignerTest {
                                                                           (byte)0x72, (byte)0xd1, (byte)0x19, (byte)0x75, 
                                                                           (byte)0x98, (byte)0x3c, (byte)0x7b, (byte)0x2c, 
                                                                           (byte)0x84, (byte)0x30, (byte)0x54, (byte)0xbc});
-        runFormatAndSignTest(new ClassicApiRequestSigner(), BaseApiRequestSigner.EncryptionAlgorithm.HMAC_MD5_ALGORITHM,
+        runFormatAndSignTest(new ClassicApiRequestSigner(), EncryptionAlgorithm.HMAC_MD5_ALGORITHM,
                              ClassicApiRequestSigner.SIGNATURE_METHOD_PARAM_NAME, getTestKey(), controlString);
     }
 
@@ -65,7 +65,7 @@ public class ClassicApiRequestSignerTest extends BaseApiRequestSignerTest {
                                                                           (byte)0x63, (byte)0xc2, (byte)0x27, (byte)0xbe, (byte)0x12, 
                                                                           (byte)0x8a, (byte)0xef, (byte)0x6d, (byte)0x40, (byte)0xc1, 
                                                                           (byte)0xa4, (byte)0x57});
-        runFormatAndSignTest(new ClassicApiRequestSigner(), BaseApiRequestSigner.EncryptionAlgorithm.HMAC_SHA256_ALGORITHM,
+        runFormatAndSignTest(new ClassicApiRequestSigner(), EncryptionAlgorithm.HMAC_SHA256_ALGORITHM,
                              ClassicApiRequestSigner.SIGNATURE_METHOD_PARAM_NAME, getTestKey(), controlString);
     }
 
@@ -82,7 +82,7 @@ public class ClassicApiRequestSignerTest extends BaseApiRequestSignerTest {
     @Test
     public void testBuilder(){
 	final Map<String, List<String>> paramMap = getTestParamMap();
-	final BaseApiRequestSigner.EncryptionAlgorithm encryption = BaseApiRequestSigner.EncryptionAlgorithm.HMAC_SHA1_ALGORITHM;
+	final EncryptionAlgorithm encryption = EncryptionAlgorithm.HMAC_SHA1_ALGORITHM;
 	final String encryptionKey = getTestKey();
 
 	ClassicApiRequestSigner.Builder builder = new ClassicApiRequestSigner.Builder()

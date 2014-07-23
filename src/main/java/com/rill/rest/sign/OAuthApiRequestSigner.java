@@ -23,7 +23,7 @@ public class OAuthApiRequestSigner extends BaseApiRequestSigner {
 
     public static final String OAUTH_SIGNATURE_METHOD = "oauth_signature_method";
 
-    public static class Builder {
+    public static class Builder implements SignatureBuilder {
 
 	private SortedMap<String, List<String>> paramMap = new TreeMap<String, List<String>>();
 	private EncryptionAlgorithm encryptionAlgorithm = null;

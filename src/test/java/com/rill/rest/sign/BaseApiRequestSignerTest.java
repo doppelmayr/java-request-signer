@@ -15,10 +15,10 @@ public abstract class BaseApiRequestSignerTest {
     protected void runTestGetEncryptionAlgorithmFromParamters(final BaseApiRequestSigner signer,
                                                               final String encryptionMethodParam){
 
-        final BaseApiRequestSigner.EncryptionAlgorithm[] encryptionAlgorithms 
-            = new BaseApiRequestSigner.EncryptionAlgorithm[]{BaseApiRequestSigner.EncryptionAlgorithm.HMAC_SHA256_ALGORITHM,
-                                                             BaseApiRequestSigner.EncryptionAlgorithm.HMAC_SHA1_ALGORITHM,
-                                                             BaseApiRequestSigner.EncryptionAlgorithm.HMAC_MD5_ALGORITHM};
+        final EncryptionAlgorithm[] encryptionAlgorithms 
+            = new EncryptionAlgorithm[]{EncryptionAlgorithm.HMAC_SHA256_ALGORITHM,
+                                        EncryptionAlgorithm.HMAC_SHA1_ALGORITHM,
+                                        EncryptionAlgorithm.HMAC_MD5_ALGORITHM};
         final String[][] algorithmSpellings = new String[][]{
             {"HmacSHA256", "hmac-sha-256", "HMAC_sha-256", "hmac-SHA_256", "HMAC_SHA_256"},
             {"HmacSHA1", "hmac-sha-1", "HMAC_sha-1", "hmac-SHA_1", "HMAC_SHA_1"},
@@ -27,7 +27,7 @@ public abstract class BaseApiRequestSignerTest {
         assertEquals(encryptionAlgorithms.length, algorithmSpellings.length);
 
         Map<String, List<String>> paramMap = getTestParamMap();
-        BaseApiRequestSigner.EncryptionAlgorithm encryptionAlgorithmFromParams = null;
+        EncryptionAlgorithm encryptionAlgorithmFromParams = null;
 
         //verify null encryption is returned if parameter is not found
         paramMap.remove(encryptionMethodParam);
@@ -42,7 +42,7 @@ public abstract class BaseApiRequestSignerTest {
         
         //verify happy cases
         int i=0;
-        for(BaseApiRequestSigner.EncryptionAlgorithm encryptionAlgorithm : encryptionAlgorithms){
+        for(EncryptionAlgorithm encryptionAlgorithm : encryptionAlgorithms){
             
             paramMap = getTestParamMap();
             encryptionAlgorithmFromParams = null;
@@ -61,7 +61,7 @@ public abstract class BaseApiRequestSignerTest {
     }
 
     protected void runFormatAndSignTest(final BaseApiRequestSigner signer,
-                                        final BaseApiRequestSigner.EncryptionAlgorithm encryptionAlgorithm,
+                                        final EncryptionAlgorithm encryptionAlgorithm,
                                         final String signatureParamName,
                                         final String key,
                                         final String expectedSignature){

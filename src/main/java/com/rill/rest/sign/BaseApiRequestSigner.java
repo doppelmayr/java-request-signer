@@ -21,29 +21,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseApiRequestSigner {
 
-    public static enum EncryptionAlgorithm {
-        HMAC_SHA256_ALGORITHM("HmacSHA256"),
-        HMAC_SHA1_ALGORITHM("HmacSHA1"),
-        HMAC_MD5_ALGORITHM("HmacMD5");
-
-        private String name;
-        private EncryptionAlgorithm(String name){
-            this.name=name;
-        }
-        public String getName(){
-            return name;
-        }
-        public static EncryptionAlgorithm fromString(String name) {
-            String normalizedName = name.replace("-","").replace("_","").toUpperCase();
-            for (EncryptionAlgorithm alg : values()) {
-                if (alg.getName().toUpperCase().equals(normalizedName)) {
-                    return alg;
-                }
-            }
-            return null;
-        }
-    }
-
     private static final Logger log = LoggerFactory.getLogger(BaseApiRequestSigner.class);
 
     protected abstract String getBaseStr(final String method, final String url);

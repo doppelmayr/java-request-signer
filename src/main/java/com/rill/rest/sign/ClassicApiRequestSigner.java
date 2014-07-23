@@ -15,36 +15,36 @@ import static com.rill.rest.util.MultiMapUtil.getSingleValueOrNull;
 public class ClassicApiRequestSigner extends BaseApiRequestSigner {
 
     public static final String SIGNATURE_METHOD_PARAM_NAME = "signatureMethod";
+    
+    public static class Builder implements SignatureBuilder {
 
-    public static class Builder {
-
-	private SortedMap<String, List<String>> paramMap = new TreeMap<String, List<String>>();
-	private EncryptionAlgorithm encryptionAlgorithm = null;
-	private String encryptionKey;
-
-	public Builder withEncryptionAlgorithm(final EncryptionAlgorithm encryptionAlgorithm){
-	    this.encryptionAlgorithm = encryptionAlgorithm;
-	    return this;
-	}
-	public Builder withParameterValue(final String parameter, final String value){
-	    addValueToMap(this.paramMap, parameter, value);
-	    return this;
-	}
-	public Builder withEncryptionKey(final String encryptionKey){
-	    this.encryptionKey = encryptionKey;
-	    return this;
-	}
-	public String sign(){
-	    if(this.encryptionAlgorithm==null){
-		throw new IllegalStateException("Encryption method required, please specify with withEncryptionAlgorithm()");
-	    }
-	    if(this.encryptionKey==null){
-		throw new IllegalStateException("Encryption key (secret) required, please specify with withEncryptionKey()");
-	    }
-	    //overrides the encryption method if there was one in the map
-	    this.paramMap.put(SIGNATURE_METHOD_PARAM_NAME, Arrays.asList(encryptionAlgorithm.getName()));
-	    return new ClassicApiRequestSigner().formatAndSign(paramMap, this.encryptionKey);
-	}
+        private SortedMap<String, List<String>> paramMap = new TreeMap<String, List<String>>();
+        private EncryptionAlgorithm encryptionAlgorithm = null;
+        private String encryptionKey;
+        
+        public Builder withEncryptionAlgorithm(final EncryptionAlgorithm encryptionAlgorithm){
+            this.encryptionAlgorithm = encryptionAlgorithm;
+            return this;
+        }
+        public Builder withParameterValue(final String parameter, final String value){
+            addValueToMap(this.paramMap, parameter, value);
+            return this;
+        }
+        public Builder withEncryptionKey(final String encryptionKey){
+            this.encryptionKey = encryptionKey;
+            return this;
+        }
+        public String sign(){
+            if(this.encryptionAlgorithm==null){
+                throw new IllegalStateException("Encryption method required, please specify with withEncryptionAlgorithm()");
+            }
+            if(this.encryptionKey==null){
+                throw new IllegalStateException("Encryption key (secret) required, please specify with withEncryptionKey()");
+            }
+            //overrides the encryption method if there was one in the map
+            this.paramMap.put(SIGNATURE_METHOD_PARAM_NAME, Arrays.asList(encryptionAlgorithm.getName()));
+            return new ClassicApiRequestSigner().formatAndSign(paramMap, this.encryptionKey);
+        }
     }
 
     private static final Logger log = LoggerFactory.getLogger(ClassicApiRequestSigner.class);
