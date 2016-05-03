@@ -12,61 +12,61 @@ import static com.rill.rest.util.MultiMapUtil.addValueToMap;
 
 public abstract class BaseApiRequestSignerTest {
 
-    protected void runTestGetEncryptionAlgorithmFromParamters(final BaseApiRequestSigner signer,
-                                                              final String encryptionMethodParam){
+    protected void runTestGetHashAlgorithmFromParamters(final BaseApiRequestSigner signer,
+                                                              final String hashMethodParam){
 
-        final EncryptionAlgorithm[] encryptionAlgorithms 
-            = new EncryptionAlgorithm[]{EncryptionAlgorithm.HMAC_SHA256_ALGORITHM,
-                                        EncryptionAlgorithm.HMAC_SHA1_ALGORITHM,
-                                        EncryptionAlgorithm.HMAC_MD5_ALGORITHM};
+        final HashAlgorithm[] hashAlgorithms 
+            = new HashAlgorithm[]{HashAlgorithm.HMAC_SHA256_ALGORITHM,
+                                  HashAlgorithm.HMAC_SHA1_ALGORITHM,
+                                  HashAlgorithm.HMAC_MD5_ALGORITHM};
         final String[][] algorithmSpellings = new String[][]{
             {"HmacSHA256", "hmac-sha-256", "HMAC_sha-256", "hmac-SHA_256", "HMAC_SHA_256"},
             {"HmacSHA1", "hmac-sha-1", "HMAC_sha-1", "hmac-SHA_1", "HMAC_SHA_1"},
             {"HmacMD5", "hmac-md-5", "HMAC_md5", "hmac-MD_5", "HMAC_MD_5"}};
 
-        assertEquals(encryptionAlgorithms.length, algorithmSpellings.length);
+        assertEquals(hashAlgorithms.length, algorithmSpellings.length);
 
         Map<String, List<String>> paramMap = getTestParamMap();
-        EncryptionAlgorithm encryptionAlgorithmFromParams = null;
+        HashAlgorithm hashAlgorithmFromParams = null;
 
-        //verify null encryption is returned if parameter is not found
-        paramMap.remove(encryptionMethodParam);
-        encryptionAlgorithmFromParams = signer.getEncryptionAlgorithm(paramMap);
-        assertNull(encryptionAlgorithmFromParams);
+        //verify null hash is returned if parameter is not found
+        paramMap.remove(hashMethodParam);
+        hashAlgorithmFromParams = signer.getHashAlgorithm(paramMap);
+        assertNull(hashAlgorithmFromParams);
             
-        //verify null encryption is returned when parameter is there but value cannot be recognized
-        addValueToMap(paramMap, encryptionMethodParam, "some bogus value");
-        encryptionAlgorithmFromParams = signer.getEncryptionAlgorithm(paramMap);
-        assertNull(encryptionAlgorithmFromParams);
-        paramMap.remove(encryptionMethodParam);
+        //verify null hash is returned when parameter is there but value cannot be recognized
+        addValueToMap(paramMap, hashMethodParam, "some bogus value");
+        hashAlgorithmFromParams = signer.getHashAlgorithm(paramMap);
+        assertNull(hashAlgorithmFromParams);
+        paramMap.remove(hashMethodParam);
         
         //verify happy cases
         int i=0;
-        for(EncryptionAlgorithm encryptionAlgorithm : encryptionAlgorithms){
+        for(HashAlgorithm hashAlgorithm : hashAlgorithms){
             
             paramMap = getTestParamMap();
-            encryptionAlgorithmFromParams = null;
+            hashAlgorithmFromParams = null;
 
-            for(String encryptionAlgorithmStr : algorithmSpellings[i++]){
-                paramMap.remove(encryptionMethodParam);
-                addValueToMap(paramMap, encryptionMethodParam, encryptionAlgorithmStr);
-                encryptionAlgorithmFromParams = signer.getEncryptionAlgorithm(paramMap);
-                assertNotNull("expected "+encryptionAlgorithmStr+" to be recognized as valid encryption algorithm",
-                              encryptionAlgorithmFromParams);
-                assertEquals("expected "+encryptionAlgorithmStr+" to be recognized as "+encryptionAlgorithm,
-                             encryptionAlgorithm, encryptionAlgorithmFromParams);
+            for(String hashAlgorithmStr : algorithmSpellings[i++]){
+                paramMap.remove(hashMethodParam);
+                addValueToMap(paramMap, hashMethodParam, hashAlgorithmStr);
+                hashAlgorithmFromParams = signer.getHashAlgorithm(paramMap);
+                assertNotNull("expected "+hashAlgorithmStr+" to be recognized as valid hash algorithm",
+                              hashAlgorithmFromParams);
+                assertEquals("expected "+hashAlgorithmStr+" to be recognized as "+hashAlgorithm,
+                             hashAlgorithm, hashAlgorithmFromParams);
             }
         }
-        assertEquals(encryptionAlgorithms.length, i);
+        assertEquals(hashAlgorithms.length, i);
     }
 
     protected void runFormatAndSignTest(final BaseApiRequestSigner signer,
-                                        final EncryptionAlgorithm encryptionAlgorithm,
+                                        final HashAlgorithm hashAlgorithm,
                                         final String signatureParamName,
                                         final String key,
                                         final String expectedSignature){
         Map<String, List<String>> paramMap = getTestParamMap();
-        addValueToMap(paramMap, signatureParamName, encryptionAlgorithm.getName());
+        addValueToMap(paramMap, signatureParamName, hashAlgorithm.getName());
         String signature = doFormatAndSign(signer, paramMap, key);
         System.out.println(signature);
         assertEquals(expectedSignature, signature);
@@ -86,7 +86,7 @@ public abstract class BaseApiRequestSignerTest {
 
     protected void runTestEmptyKeyFormatAndSign(final BaseApiRequestSigner signer, final String signatureParamName){
         Map<String, List<String>> paramMap = getTestParamMap(); 
-        addValueToMap(paramMap, signatureParamName, "HmacSHA256"); //valid encryption algorithm, to get to the error
+        addValueToMap(paramMap, signatureParamName, "HmacSHA256"); //valid hash algorithm, to get to the error
         String signature = doFormatAndSign(signer, paramMap, ""); 
         assertNull(signature);
     }

@@ -24,22 +24,22 @@ public abstract class BaseApiRequestSigner {
     private static final Logger log = LoggerFactory.getLogger(BaseApiRequestSigner.class);
 
     protected abstract String getBaseStr(final String method, final String url);
-    public abstract EncryptionAlgorithm getEncryptionAlgorithm(Map<String, List<String>> parameterMap);
-    protected abstract String processParamNamePreEncryption(final String param);
-    protected abstract String processParamValuePreEncryption(final String param);
-    protected abstract String processSortedParameterStringPreEncryption(final String sortedParamString);
+    public abstract HashAlgorithm getHashAlgorithm(Map<String, List<String>> parameterMap);
+    protected abstract String processParamNamePreHash(final String param);
+    protected abstract String processParamValuePreHash(final String param);
+    protected abstract String processSortedParameterStringPreHash(final String sortedParamString);
 
     public String formatAndSign(String method, String url, Map<String, List<String>> params, String key){
 
         SortedMap sortedMap = getSortedMap(params);
         String sortedParamStr = getSortedParameterString(sortedMap);
         String base = getBaseStr(method, url);
-        EncryptionAlgorithm encryptionAlgorithm = getEncryptionAlgorithm(params);
-        if(encryptionAlgorithm == null){ //should not be; we validate upfront
-            log.error("this shouldn't happen: could not figure out encryption alg: {}", params);
+        HashAlgorithm hashAlgorithm = getHashAlgorithm(params);
+        if(hashAlgorithm == null){ //should not be; we validate upfront
+            log.error("this shouldn't happen: could not figure out hash alg: {}", params);
             return null;
         }
-        return signString(encryptionAlgorithm, base+sortedParamStr, key);
+        return signString(hashAlgorithm, base+sortedParamStr, key);
     }
 
     protected SortedMap getSortedMap(Map<String, List<String>> params){
@@ -57,26 +57,26 @@ public abstract class BaseApiRequestSigner {
         StringBuilder sb = new StringBuilder();
         for (String paramName : params.keySet()) {
             for (String paramValue : params.get(paramName)){
-                sb.append(processParamNamePreEncryption(paramName))
+                sb.append(processParamNamePreHash(paramName))
                     .append("=")
-                    .append(processParamValuePreEncryption(paramValue)).append("&");
+                    .append(processParamValuePreHash(paramValue)).append("&");
             }
         }
         
         sb.deleteCharAt(sb.length()-1);  // remove last '&' char
-        return processSortedParameterStringPreEncryption(sb.toString());
+        return processSortedParameterStringPreHash(sb.toString());
     }
     
         
-    private String signString(EncryptionAlgorithm encryptionAlgorithm, String str, String key) {
-        log.debug("signing [{}] with [{}]", str, encryptionAlgorithm);
+    private String signString(HashAlgorithm hashAlgorithm, String str, String key) {
+        log.debug("signing [{}] with [{}]", str, hashAlgorithm);
         String result = null;
         try {
             // Get an hmac_sha256 key from the raw key bytes.
-            SecretKeySpec signingKey = new SecretKeySpec(key.getBytes("UTF8"), encryptionAlgorithm.getName());
+            SecretKeySpec signingKey = new SecretKeySpec(key.getBytes("UTF8"), hashAlgorithm.getName());
 
             // Get an hmac_sha256 Mac instance and initialize with the signing key.
-            Mac mac = Mac.getInstance(encryptionAlgorithm.getName());
+            Mac mac = Mac.getInstance(hashAlgorithm.getName());
             mac.init(signingKey);
             
             // Compute the hmac on input data bytes.

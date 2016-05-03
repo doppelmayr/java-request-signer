@@ -14,7 +14,7 @@ OAuth:
 ```java
 
         OAuthApiRequestSigner.Builder builder = new OAuthApiRequestSigner.Builder()
-            .withEncryptionAlgorithm(encryption).withEncryptionKey(secretEncryptionKey)
+            .withHashAlgorithm("HmacSHA256").withHashKey(secretHashKey)
             .withMethod("POST")
             .withUrl(url);
         builder.withParameterValue(param1, valueA);       
@@ -26,7 +26,7 @@ Basic signature:
 ```java
 
 	ClassicApiRequestSigner.Builder builder = new ClassicApiRequestSigner.Builder()
-	    .withEncryptionAlgorithm(encryption).withEncryptionKey(secretEncryptionKey);
+	    .withHashAlgorithm(hash).withHashKey(secretHashKey);
         builder.withParameterValue(param1, valueA);       
         builder.withParameterValue(param1, valueB);       
         builder.withParameterValue(param2, valueX);       
@@ -35,9 +35,9 @@ Basic signature:
 If you alreaty have multimap (Map<String, List<String>>) representation of request fields handy, 
 ```java
 
-	String signature = new OAuthApiRequestSigner().formatAndSign(method, url, paramMap, secretEncryptionKey);
+	String signature = new OAuthApiRequestSigner().formatAndSign(method, url, paramMap, secretHashKey);
 	or
-	String signature = new ClassicApiRequestSigner().formatAndSign(paramMap, secretEncryptionKey);
+	String signature = new ClassicApiRequestSigner().formatAndSign(paramMap, secretHashKey);
 ```
 
 Use signature to sign your request using your preferred representation and your choice of signature parameter name.

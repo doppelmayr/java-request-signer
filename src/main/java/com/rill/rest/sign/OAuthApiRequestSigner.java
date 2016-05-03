@@ -26,13 +26,13 @@ public class OAuthApiRequestSigner extends BaseApiRequestSigner {
     public static class Builder implements SignatureBuilder {
 
 	private SortedMap<String, List<String>> paramMap = new TreeMap<String, List<String>>();
-	private EncryptionAlgorithm encryptionAlgorithm = null;
-	private String encryptionKey = null;
+	private HashAlgorithm hashAlgorithm = null;
+	private String hashKey = null;
 	private String method = null;
 	private String url = null;
 
-	public Builder withEncryptionAlgorithm(final EncryptionAlgorithm encryptionAlgorithm){
-	    this.encryptionAlgorithm = encryptionAlgorithm;
+	public Builder withHashAlgorithm(final HashAlgorithm hashAlgorithm){
+	    this.hashAlgorithm = hashAlgorithm;
 	    return this;
 	}
 	public Builder withMethod(final String method){
@@ -49,16 +49,16 @@ public class OAuthApiRequestSigner extends BaseApiRequestSigner {
 	    addValueToMap(this.paramMap, parameter, value);
 	    return this;
 	}
-	public Builder withEncryptionKey(final String encryptionKey){
-	    this.encryptionKey = encryptionKey;
+	public Builder withHashKey(final String hashKey){
+	    this.hashKey = hashKey;
 	    return this;
 	}
 	public String sign(){
-	    if(this.encryptionAlgorithm==null){
-		throw new IllegalStateException("Encryption method required, please specify with withEncryptionAlgorithm()");
+	    if(this.hashAlgorithm==null){
+		throw new IllegalStateException("Hash method required, please specify with withHashAlgorithm()");
 	    }
-	    if(this.encryptionKey==null){
-		throw new IllegalStateException("Encryption key (secret) required, please specify with withEncryptionKey()");
+	    if(this.hashKey==null){
+		throw new IllegalStateException("Hash key (secret) required, please specify with withHashKey()");
 	    }
 	    if(this.url==null){
 		throw new IllegalStateException("Url required, please specify with withUrl()");
@@ -66,9 +66,9 @@ public class OAuthApiRequestSigner extends BaseApiRequestSigner {
 	    if(this.method==null){
 		throw new IllegalStateException("Method required, please specify with withMethod()");
 	    }
-	    //overrides the encryption method if there was one in the map
-	    this.paramMap.put(OAUTH_SIGNATURE_METHOD, Arrays.asList(encryptionAlgorithm.getName()));
-	    return new OAuthApiRequestSigner().formatAndSign(this.method, this.url, paramMap, this.encryptionKey);
+	    //overrides the hash method if there was one in the map
+	    this.paramMap.put(OAUTH_SIGNATURE_METHOD, Arrays.asList(hashAlgorithm.getName()));
+	    return new OAuthApiRequestSigner().formatAndSign(this.method, this.url, paramMap, this.hashKey);
 	}
     }
         
@@ -76,21 +76,21 @@ public class OAuthApiRequestSigner extends BaseApiRequestSigner {
 
     private URLCodec urlCodec = new URLCodec();
 
-    public EncryptionAlgorithm getEncryptionAlgorithm(Map<String, List<String>> parameterMap){
+    public HashAlgorithm getHashAlgorithm(Map<String, List<String>> parameterMap){
 
-        String encryptionAlgorithmString = getSingleValueOrNull(parameterMap, OAUTH_SIGNATURE_METHOD);
-        return encryptionAlgorithmString!=null ? EncryptionAlgorithm.fromString(encryptionAlgorithmString) : null;
+        String hashAlgorithmString = getSingleValueOrNull(parameterMap, OAUTH_SIGNATURE_METHOD);
+        return hashAlgorithmString!=null ? HashAlgorithm.fromString(hashAlgorithmString) : null;
     }
 
-    protected String processParamNamePreEncryption(final String param){
+    protected String processParamNamePreHash(final String param){
         return urlEncode(param);
     }
 
-    protected String processParamValuePreEncryption(final String value){
+    protected String processParamValuePreHash(final String value){
         return urlEncode(value);
     }
 
-    protected String processSortedParameterStringPreEncryption(final String sortedParamString){
+    protected String processSortedParameterStringPreHash(final String sortedParamString){
         return urlEncode(sortedParamString);
     }
     

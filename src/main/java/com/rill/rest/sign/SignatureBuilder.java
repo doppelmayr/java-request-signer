@@ -2,9 +2,9 @@ package com.rill.rest.sign;
 
 public interface SignatureBuilder {
 
-    SignatureBuilder withEncryptionAlgorithm(EncryptionAlgorithm encryptionAlgorithm);
+    SignatureBuilder withHashAlgorithm(HashAlgorithm hashAlgorithm);
     SignatureBuilder withParameterValue(String parameter, final String value);
-    SignatureBuilder withEncryptionKey(String encryptionKey);
+    SignatureBuilder withHashKey(String hashKey);
     String sign();
 
 }

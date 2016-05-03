@@ -14,8 +14,8 @@ import static com.rill.rest.util.MultiMapUtil.addValueToMap;
 public class OAuthApiRequestSignerTest extends BaseApiRequestSignerTest {
 
     @Test
-    public void testGetEncryptionAlgorithmFromParamters(){        
-        runTestGetEncryptionAlgorithmFromParamters(new OAuthApiRequestSigner(), OAuthApiRequestSigner.OAUTH_SIGNATURE_METHOD);
+    public void testGetHashAlgorithmFromParamters(){        
+        runTestGetHashAlgorithmFromParamters(new OAuthApiRequestSigner(), OAuthApiRequestSigner.OAUTH_SIGNATURE_METHOD);
     }
 
     protected String doFormatAndSign(final BaseApiRequestSigner signer, final Map<String, List<String>> paramMap, final String key){
@@ -33,7 +33,7 @@ public class OAuthApiRequestSignerTest extends BaseApiRequestSignerTest {
                                                                           (byte)0x56, (byte)0x61, (byte)0x1f, (byte)0xf2, (byte)0x3b, 
                                                                           (byte)0x68, (byte)0xda, (byte)0x24, (byte)0xd4, (byte)0xac, 
                                                                           (byte)0x1b, (byte)0x5f, (byte)0x33, (byte)0x03, (byte)0x36});
-        runFormatAndSignTest(new OAuthApiRequestSigner(), EncryptionAlgorithm.HMAC_SHA1_ALGORITHM,
+        runFormatAndSignTest(new OAuthApiRequestSigner(), HashAlgorithm.HMAC_SHA1_ALGORITHM,
                              OAuthApiRequestSigner.OAUTH_SIGNATURE_METHOD, getTestKey(), controlString);
     }
 
@@ -48,7 +48,7 @@ public class OAuthApiRequestSignerTest extends BaseApiRequestSignerTest {
                                                                           (byte)0x71, (byte)0x79, (byte)0x3f, (byte)0xb9, (byte)0xe2, 
                                                                           (byte)0x4c, (byte)0x70, (byte)0x91, (byte)0xb9, (byte)0xec, 
                                                                           (byte)0x90});
-        runFormatAndSignTest(new OAuthApiRequestSigner(), EncryptionAlgorithm.HMAC_MD5_ALGORITHM,
+        runFormatAndSignTest(new OAuthApiRequestSigner(), HashAlgorithm.HMAC_MD5_ALGORITHM,
                              OAuthApiRequestSigner.OAUTH_SIGNATURE_METHOD, getTestKey(), controlString);
     }
 
@@ -66,7 +66,7 @@ public class OAuthApiRequestSignerTest extends BaseApiRequestSignerTest {
                                                                           (byte)0xfd, (byte)0x5c, (byte)0x32, (byte)0x15, (byte)0x61, 
                                                                           (byte)0xfe, (byte)0x00, (byte)0x2e, (byte)0x4f, (byte)0x65, 
                                                                           (byte)0xe9, (byte)0x8e});
-        runFormatAndSignTest(new OAuthApiRequestSigner(), EncryptionAlgorithm.HMAC_SHA256_ALGORITHM,
+        runFormatAndSignTest(new OAuthApiRequestSigner(), HashAlgorithm.HMAC_SHA256_ALGORITHM,
                              OAuthApiRequestSigner.OAUTH_SIGNATURE_METHOD, getTestKey(), controlString);
 
     }
@@ -84,11 +84,11 @@ public class OAuthApiRequestSignerTest extends BaseApiRequestSignerTest {
     @Test
     public void testBuilder(){
 	final Map<String, List<String>> paramMap = getTestParamMap();
-	final EncryptionAlgorithm encryption = EncryptionAlgorithm.HMAC_SHA1_ALGORITHM;
-	final String encryptionKey = getTestKey();
+	final HashAlgorithm hash = HashAlgorithm.HMAC_SHA1_ALGORITHM;
+	final String hashKey = getTestKey();
 
 	OAuthApiRequestSigner.Builder builder = new OAuthApiRequestSigner.Builder()
-	    .withEncryptionAlgorithm(encryption).withEncryptionKey(encryptionKey)
+	    .withHashAlgorithm(hash).withHashKey(hashKey)
 	    .withMethod(getMethod())
 	    .withUrl(getUrl());
 	for(String param : paramMap.keySet()){
@@ -98,8 +98,8 @@ public class OAuthApiRequestSignerTest extends BaseApiRequestSignerTest {
 	}
 	final String signatureFromBuilder = builder.sign();
 
-	addValueToMap(paramMap, OAuthApiRequestSigner.OAUTH_SIGNATURE_METHOD, encryption.getName());
-	final String signatureFromMap = doFormatAndSign(new OAuthApiRequestSigner(), paramMap, encryptionKey); 
+	addValueToMap(paramMap, OAuthApiRequestSigner.OAUTH_SIGNATURE_METHOD, hash.getName());
+	final String signatureFromMap = doFormatAndSign(new OAuthApiRequestSigner(), paramMap, hashKey); 
 
 	assertEquals("expect same signature from map and bulder", signatureFromMap, signatureFromBuilder);
 
